@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LotComputeMetroUI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="vrCurrencyPair" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EURUSD</Value>
+    </Setting>
+    <Setting Name="vrRisk" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="vrSL" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="vrDeposit" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="vrDepistiCurrency" Type="System.String" Scope="User">
+      <Value Profile="(Default)">RUR</Value>
+    </Setting>
+    <Setting Name="vrMinLot" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.01</Value>
+    </Setting>
+    <Setting Name="vrLotStep" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.01</Value>
+    </Setting>
+    <Setting Name="vrLotSize" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">100000</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,324 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:LotComputeMetroUI" xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Name="MainWindow1"  mc:Ignorable="d" x:Class="LotComputeMetroUI.MainWindow"
+        Title="MainWindow" Height="511.5" Width="714" WindowStyle="None" BorderThickness="4" ResizeMode="NoResize" Icon="icon.ico" Closed="MainWindow1_Closed" Loaded="MainWindow1_Loaded" Foreground="{x:Null}" Background="White" BorderBrush="{Binding Fill, ElementName=gResult}">
+    <Window.Resources>
+        <local:DoubleConverter x:Key="DoubleConverter"/>
+        <Style x:Key="ChromeComboBoxWhite" TargetType="{x:Type ComboBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource ComboBoxFocusVisual}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+            <Setter Property="Background" Value="{StaticResource ButtonNormalBackground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding" Value="4,3"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid x:Name="MainGrid" SnapsToDevicePixels="true">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                            </Grid.ColumnDefinitions>
+                            <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
+                                <Border x:Name="DropDownBorder" BorderBrush="Black" BorderThickness="1" Background="White">
+                                    <ScrollViewer x:Name="DropDownScrollViewer" Foreground="Black">
+                                        <Grid RenderOptions.ClearTypeHint="Enabled">
+                                            <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                                <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=DropDownBorder}" Height="{Binding ActualHeight, ElementName=DropDownBorder}" Width="{Binding ActualWidth, ElementName=DropDownBorder}"/>
+                                            </Canvas>
+                                            <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                        </Grid>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                            <ToggleButton BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{DynamicResource ToggleButtonStyleWhite}"/>
+                            <ContentPresenter ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Content="{TemplateBinding SelectionBoxItem}" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="false" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true"/>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter Property="Height" TargetName="DropDownBorder" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                <Setter Property="Background" Value="#FFF4F4F4"/>
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
+                                <Setter Property="Canvas.Top" TargetName="OpaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
+                                <Setter Property="Canvas.Left" TargetName="OpaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEditable" Value="true">
+                    <Setter Property="BorderBrush" Value="{StaticResource TextBoxBorder}"/>
+                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                    <Setter Property="IsTabStop" Value="false"/>
+                    <Setter Property="Padding" Value="3"/>
+                    <Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ToggleButtonStyleWhite" TargetType="{x:Type ToggleButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="ClickMode" Value="Press"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Grid Background="#00000000">
+                            <Grid HorizontalAlignment="Right" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Margin="0,2,2,2">
+                                <Path x:Name="Arrow" Data="{StaticResource DownArrowGeometry}" Fill="Black" HorizontalAlignment="Center" Margin="3,1,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="true"/>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="Arrow" Value="#AFAFAF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ChromeSliderWhite" TargetType="{x:Type Slider}">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FFC4C4C4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TickBar x:Name="TopTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Top" Grid.Row="0" Visibility="Collapsed"/>
+                                <TickBar x:Name="BottomTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Bottom" Grid.Row="2" Visibility="Collapsed"/>
+                                <Border x:Name="TrackBackground" BorderThickness="1" CornerRadius="1" Height="4.0" Margin="5,0" Grid.Row="1" VerticalAlignment="center" Background="Black">
+                                    <Canvas Margin="-6,-1">
+                                        <Rectangle x:Name="PART_SelectionRange" Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Height="4.0" Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" StrokeThickness="1.0" Visibility="Hidden"/>
+                                    </Canvas>
+                                </Border>
+                                <Track x:Name="PART_Track" Grid.Row="1">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}" d:IsHidden="True"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb x:Name="Thumb" Style="{DynamicResource ThumbStyleWhite}"/>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="TickPlacement" Value="TopLeft">
+                                <Setter Property="Visibility" TargetName="TopTick" Value="Visible"/>
+                                <Setter Property="Style" TargetName="Thumb" Value="{StaticResource HorizontalSliderUpThumbStyle}"/>
+                                <Setter Property="Margin" TargetName="TrackBackground" Value="5,2,5,0"/>
+                            </Trigger>
+                            <Trigger Property="TickPlacement" Value="BottomRight">
+                                <Setter Property="Visibility" TargetName="BottomTick" Value="Visible"/>
+                                <Setter Property="Style" TargetName="Thumb" Value="{StaticResource HorizontalSliderDownThumbStyle}"/>
+                                <Setter Property="Margin" TargetName="TrackBackground" Value="5,0,5,2"/>
+                            </Trigger>
+                            <Trigger Property="TickPlacement" Value="Both">
+                                <Setter Property="Visibility" TargetName="TopTick" Value="Visible"/>
+                                <Setter Property="Visibility" TargetName="BottomTick" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsSelectionRangeEnabled" Value="true">
+                                <Setter Property="Visibility" TargetName="PART_SelectionRange" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Slider}">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition MinWidth="{TemplateBinding MinWidth}" Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TickBar x:Name="TopTick" Grid.Column="0" Fill="{TemplateBinding Foreground}" Placement="Left" Visibility="Collapsed" Width="4"/>
+                                        <TickBar x:Name="BottomTick" Grid.Column="2" Fill="{TemplateBinding Foreground}" Placement="Right" Visibility="Collapsed" Width="4"/>
+                                        <Border x:Name="TrackBackground" BorderBrush="{StaticResource VerticalSliderTrackNormalBorder}" BorderThickness="1" Background="{StaticResource HorizontalSliderTrackNormalBackground}" Grid.Column="1" CornerRadius="1" HorizontalAlignment="center" Margin="0,5" Width="4.0">
+                                            <Canvas Margin="-1,-6">
+                                                <Rectangle x:Name="PART_SelectionRange" Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" StrokeThickness="1.0" Visibility="Hidden" Width="4.0"/>
+                                            </Canvas>
+                                        </Border>
+                                        <Track x:Name="PART_Track" Grid.Column="1">
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                                            </Track.IncreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb x:Name="Thumb" Style="{StaticResource VerticalSliderThumbStyle}"/>
+                                            </Track.Thumb>
+                                        </Track>
+                                    </Grid>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="TickPlacement" Value="TopLeft">
+                                        <Setter Property="Visibility" TargetName="TopTick" Value="Visible"/>
+                                        <Setter Property="Style" TargetName="Thumb" Value="{StaticResource VerticalSliderLeftThumbStyle}"/>
+                                        <Setter Property="Margin" TargetName="TrackBackground" Value="2,5,0,5"/>
+                                    </Trigger>
+                                    <Trigger Property="TickPlacement" Value="BottomRight">
+                                        <Setter Property="Visibility" TargetName="BottomTick" Value="Visible"/>
+                                        <Setter Property="Style" TargetName="Thumb" Value="{StaticResource VerticalSliderRightThumbStyle}"/>
+                                        <Setter Property="Margin" TargetName="TrackBackground" Value="0,5,2,5"/>
+                                    </Trigger>
+                                    <Trigger Property="TickPlacement" Value="Both">
+                                        <Setter Property="Visibility" TargetName="TopTick" Value="Visible"/>
+                                        <Setter Property="Visibility" TargetName="BottomTick" Value="Visible"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelectionRangeEnabled" Value="true">
+                                        <Setter Property="Visibility" TargetName="PART_SelectionRange" Value="Visible"/>
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="true">
+                                        <Setter Property="Foreground" TargetName="Thumb" Value="Blue"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ThumbStyleWhite" TargetType="{x:Type Thumb}">
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Width" Value="11"/>
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Canvas SnapsToDevicePixels="true">
+                            <Canvas.RenderTransform>
+                                <TranslateTransform X="5.5" Y="11"/>
+                            </Canvas.RenderTransform>
+                            <Path x:Name="Background" Data="{StaticResource SliderThumbOuterBorderGeometry}" Fill="Black"/>
+                            <Path x:Name="OuterBorder" Data="{StaticResource SliderThumbOuterBorderGeometry}" Stroke="#FFB4B4B4"/>
+                        </Canvas>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Fill" TargetName="Background" Value="{StaticResource HorizontalSliderThumbHoverBackground}"/>
+                                <Setter Property="Stroke" TargetName="OuterBorder" Value="{StaticResource HorizontalSliderThumbHoverBorder}"/>
+                            </Trigger>
+                            <Trigger Property="Foreground" Value="Blue">
+                                <Setter Property="Fill" TargetName="Background" Value="{StaticResource HorizontalSliderThumbHoverBackground}"/>
+                                <Setter Property="Stroke" TargetName="OuterBorder" Value="{StaticResource HorizontalSliderThumbHoverBorder}"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter Property="Fill" TargetName="Background" Value="{StaticResource HorizontalSliderThumbPressedBackground}"/>
+                                <Setter Property="Stroke" TargetName="OuterBorder" Value="{StaticResource HorizontalSliderThumbPressedBorder}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="Background" Value="#FFF4F4F4"/>
+                                <Setter Property="Data" TargetName="OuterBorder" Value="{StaticResource SliderThumbDisabledGeometry}"/>
+                                <Setter Property="Stroke" TargetName="OuterBorder" Value="#FFAEB1AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Height="35" VerticalAlignment="Top" Margin="0" d:LayoutOverrides="Margin">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Rectangle/>
+            <Label Content="$" HorizontalAlignment="Left" Margin="10,0,0,-4" Background="{x:Null}" Foreground="#FFD1D1D1" FontSize="18" FontWeight="Bold"/>
+            <Label x:Name="lCaption" Content="Forex Lot Compute by A1ex" Margin="10,0,0,0" Background="{x:Null}" Foreground="#FF8B8B8B" FontSize="18" Height="35" HorizontalContentAlignment="Center" Width="652" HorizontalAlignment="Left" FontStyle="Italic"/>
+            <Rectangle x:Name="Header" MouseDown="HandleMove" Fill="#00802828" d:IsLocked="True"/>
+            <Button x:Name="bClose" Content="r" Margin="0,10,10,0" VerticalAlignment="Top" Style="{DynamicResource ChromeButtonStyle}" Foreground="#FF8B8B8B" FontFamily="Webdings" RenderTransformOrigin="0.417,0.417" HorizontalAlignment="Right" BorderThickness="0" BorderBrush="#00000000" Click="HandleClose"/>
+            <Button x:Name="bMinimize" Content="0" Margin="0,10,27,0" VerticalAlignment="Top" Style="{DynamicResource ChromeButtonStyle}" Foreground="#FF8B8B8B" FontFamily="Webdings" RenderTransformOrigin="0.333,0.333" HorizontalAlignment="Right" BorderThickness="0" BorderBrush="#00000000" Click="HandleMinimize"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="200" Margin="32,54,0,0" VerticalAlignment="Top" Width="200" d:LayoutOverrides="HorizontalMargin">
+            <Rectangle Panel.ZIndex="-1" StrokeThickness="2" Fill="#FF2C6192"/>
+            <Label Content="ДЕПОЗИТ" Margin="10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold"/>
+            <Label x:Name="lCurrencySymbol" Content="$" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="96" FontWeight="Bold" Height="131" Margin="10,26,0,0" Opacity="0.5" Width="71" Background="{x:Null}"/>
+            <ComboBox x:Name="cDepositCurrency" HorizontalAlignment="Left" Margin="81,81,0,0" VerticalAlignment="Top" Width="97" Height="52" Style="{DynamicResource ChromeComboBox}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" FontSize="36" RenderTransformOrigin="0.443,0.346"/>
+            <TextBox x:Name="tDeposit" HorizontalAlignment="Left" Margin="10,152,0,0" TextWrapping="Wrap" Text="xxxxx,xx" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" SelectionBrush="#FF193D6A" FontSize="24" Width="181" TextAlignment="Center" Style="{DynamicResource ChromeTextBox}" MaxLines="1"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="200" Margin="32,276,0,0" VerticalAlignment="Top" Width="200" d:LayoutOverrides="HorizontalMargin">
+            <Rectangle Panel.ZIndex="-1" StrokeThickness="2" Fill="#FFE68600"/>
+            <ComboBox x:Name="cCurrencyPair" HorizontalAlignment="Left" Margin="10,61,0,0" VerticalAlignment="Top" Width="180" Height="52" Style="{DynamicResource ChromeComboBox}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="White" SelectedIndex="0" FontSize="36" RenderTransformOrigin="0.443,0.346"/>
+            <TextBlock x:Name="tBid" HorizontalAlignment="Left" Margin="10,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="37" Width="89" Foreground="#FF970D0D" FontSize="22" FontWeight="Bold"><Run Text="xx"/><Run Language="ru-ru" Text=".xxxx"/></TextBlock>
+            <TextBlock x:Name="tAsk" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="37" Width="89" Foreground="#FF0D9752" FontSize="22" FontWeight="Bold" RenderTransformOrigin="1.034,1.324" Margin="101,118,0,0" TextAlignment="Right"><Run Text="x"/><Run Language="ru-ru" Text="."/><Run Text="xx"/><Run Language="ru-ru" Text="xx"/></TextBlock>
+            <TextBlock x:Name="tSpread" HorizontalAlignment="Left" Margin="10,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="37" Width="180" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="22" FontWeight="Bold" TextAlignment="Center"><Run Language="ru-ru" Text="xx"/></TextBlock>
+            <Label Content="ИНСТРУМЕНТ" Margin="10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold"/>
+        </Grid>
+        <Grid Height="200" Margin="252,276,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" d:LayoutOverrides="HorizontalMargin">
+            <Rectangle Panel.ZIndex="-1" StrokeThickness="2" Fill="#FFBE3800"/>
+            <TextBox x:Name="tRisk" HorizontalAlignment="Left" Margin="15,113,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" SelectionBrush="#FF193D6A" FontSize="24" Width="112" TextAlignment="Right" Style="{DynamicResource ChromeTextBox}" Text="{Binding Value, Converter={StaticResource DoubleConverter}, ElementName=riskSlider}"/>
+            <TextBox x:Name="tSL" HorizontalAlignment="Left" Margin="10,65,0,0" TextWrapping="Wrap" Text="xxx" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" SelectionBrush="#FF193D6A" FontSize="24" Width="112" Style="{DynamicResource ChromeTextBox}" TextAlignment="Right"/>
+            <Label Content="pips" Margin="127,61.078,10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold" Height="43"/>
+            <Label Content="%" Margin="127,109,10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold" Height="43"/>
+            <Label Content="РИСК" Margin="10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold"/>
+            <Slider x:Name="riskSlider" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Width="180" Style="{DynamicResource ChromeSlider}" Height="24" Maximum="25" Minimum="0.01"/>
+        </Grid>
+        <Grid Height="200" Margin="252,53,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" d:LayoutOverrides="HorizontalMargin">
+            <Rectangle Panel.ZIndex="-1" StrokeThickness="2" Fill="#FF7E5CAB"/>
+            <Label Content="ЛОТ" Margin="10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold"/>
+            <Label Content="лот" Margin="10,42,127,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold" Height="43" HorizontalContentAlignment="Right"/>
+            <Label Content="мин." Margin="10,85,127,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold" Height="43" HorizontalAlignment="Right"/>
+            <Label x:Name="label" Content="шаг" Margin="10,128,127,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold" Height="43" HorizontalContentAlignment="Right"/>
+            <TextBox x:Name="tLotSize" HorizontalAlignment="Left" Margin="78,46,0,0" TextWrapping="Wrap" Text="xxx" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" SelectionBrush="#FF193D6A" FontSize="24" Width="112" Style="{DynamicResource ChromeTextBox}" TextAlignment="Right"/>
+            <TextBox x:Name="tMinLot" HorizontalAlignment="Left" Margin="78,89,0,0" TextWrapping="Wrap" Text="xxx" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" SelectionBrush="#FF193D6A" FontSize="24" Width="112" Style="{DynamicResource ChromeTextBox}" TextAlignment="Right"/>
+            <TextBox x:Name="tLotStep" HorizontalAlignment="Left" Margin="78,132,0,0" TextWrapping="Wrap" Text="xxx" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" SelectionBrush="#FF193D6A" FontSize="24" Width="112" Style="{DynamicResource ChromeTextBox}" TextAlignment="Right"/>
+        </Grid>
+        <Grid Height="422" Margin="472,54,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200">
+            <Rectangle x:Name="gResult" Panel.ZIndex="-1" StrokeThickness="2" Fill="#FF30AB30"/>
+            <Label Content="РЕЗУЛЬТАТЫ" Margin="10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" FontWeight="Bold"/>
+            <Label Content="Ст. пункта" Margin="13.606,53,0,0"  VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="21.333" FontWeight="Bold" Height="43" HorizontalContentAlignment="Left" Width="178.197" HorizontalAlignment="Left"/>
+            <Label Content="Макс. убыток" Margin="11.803,149,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="21.333" FontWeight="Bold" Height="43" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Width="178.197" RenderTransformOrigin="0.678,0.488"/>
+            <Label Content="Оптим. лот" Margin="10,235,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="21.333" FontWeight="Bold" Height="43" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Width="180"/>
+            <Label Content="&lt;50% за сделок" Margin="11.803,326,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="21.333" FontWeight="Bold" Height="43" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Width="180"/>
+            <Label x:Name="tPipCost" Content="xxx" Margin="20,96,18,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="22" Height="43" HorizontalContentAlignment="Right" RenderTransformOrigin="0.494,0.302"/>
+            <Label x:Name="tMaxLose" Content="xxx" Margin="12,192,18,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="22" Height="43" HorizontalContentAlignment="Right"/>
+            <Label x:Name="tSurviveChance" Content="xxx" Margin="20,369,10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" Height="43" HorizontalContentAlignment="Right"/>
+            <Label x:Name="tOptimalLot" Content="xxx" Margin="10,278,10,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="24" Height="43" HorizontalContentAlignment="Right"/>
+            <TextBlock HorizontalAlignment="Left" Margin="182,107,0,0" TextWrapping="Wrap" Text="{Binding Content, ElementName=lCurrencySymbol}" VerticalAlignment="Top" Height="23" Width="13" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="16" FontWeight="Bold" RenderTransformOrigin="0.795,-0.174"/>
+            <TextBlock HorizontalAlignment="Left" Margin="182,203,0,0" TextWrapping="Wrap" Text="{Binding Content, ElementName=lCurrencySymbol}" VerticalAlignment="Top" Height="23" Width="13" Foreground="{Binding Foreground, ElementName=tDeposit}" FontSize="16" FontWeight="Bold"/>
+        </Grid>
+
+    </Grid>
+</Window>
